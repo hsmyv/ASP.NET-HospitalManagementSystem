@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hospital.Repositories;
+using Hospital.Repositories.Implementation;
+using Hospital.Repositories.Interfaces;
+using Hospital.Utilites;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +34,12 @@ namespace HospitalManagementSystem
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped<IDbInitializer, DbInitializer>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,17 +57,26 @@ namespace HospitalManagementSystem
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            DataSeeding(app);
             app.UseRouting();
 
             app.UseAuthorization();
-
+            //app.MapRazorPages();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{Area=Patient}/{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void DataSeeding(IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                dbInitializer.Initialize();
+            }
         }
     }
 }
