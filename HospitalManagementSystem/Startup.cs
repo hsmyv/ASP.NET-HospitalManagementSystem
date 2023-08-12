@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +40,7 @@ namespace HospitalManagementSystem
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddRazorPages();
         }
 

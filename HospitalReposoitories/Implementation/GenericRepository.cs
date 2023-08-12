@@ -27,9 +27,14 @@ namespace Hospital.Repositories.Implementation
 
         public async Task<T> AddAsync(T entity)
         {
-            dbSet.Add(entity);
+            await Task.Run(() =>
+            {
+                dbSet.Add(entity);
+            });
+
             return entity;
         }
+
 
         public void Delete(T entity)
         {
@@ -42,13 +47,19 @@ namespace Hospital.Repositories.Implementation
 
         public async Task<T> DeleteAsync(T entity)
         {
-            if (_context.Entry(entity).State == EntityState.Detached)
+            await Task.Run(() =>
             {
-                dbSet.Attach(entity);
-            }
-            dbSet.Remove(entity);
+                if (_context.Entry(entity).State == EntityState.Detached)
+                {
+                    dbSet.Attach(entity);
+                }
+
+                dbSet.Remove(entity);
+            });
+
             return entity;
         }
+
 
         private bool disposed = false;
 
@@ -115,8 +126,12 @@ namespace Hospital.Repositories.Implementation
         {
             dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
             return entity;
         }
+
 
     }
 }
