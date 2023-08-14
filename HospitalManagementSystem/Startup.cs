@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hospital.Repositories;
 using Hospital.Repositories.Implementation;
 using Hospital.Repositories.Interfaces;
+using Hospital.Services;
 using Hospital.Utilites;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +42,7 @@ namespace HospitalManagementSystem
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddTransient<IHospitalInfo, HospitalInfoService>();
             services.AddRazorPages();
         }
 
