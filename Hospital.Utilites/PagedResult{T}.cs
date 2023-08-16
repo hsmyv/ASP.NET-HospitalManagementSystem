@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hospital.Utilites
 {
-    public class PagedResult<T>  where T : class
+    public class PagedResult<T> where T : class
     {
         public PagedResult()
         {
