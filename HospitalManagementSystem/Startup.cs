@@ -38,6 +38,9 @@ namespace HospitalManagementSystem
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddTransient<IHospitalInfo, HospitalInfoService>();
+            services.AddTransient<IRoomService, RoomService>();
+            services.AddTransient<IContactService, ContactService>();
+
             services.AddRazorPages();
         }
 
