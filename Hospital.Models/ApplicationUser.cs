@@ -17,6 +17,7 @@ namespace Hospital.Models
         public DateTime DOB { get; set; }
         public string Specialist { get; set; }
         public bool IsDoctor { get; set; }
+        public string PictureUri { get; set; }
         public Department Department { get; set; }
         [NotMapped]
         public ICollection<Appointment> Appointments { get; set; }

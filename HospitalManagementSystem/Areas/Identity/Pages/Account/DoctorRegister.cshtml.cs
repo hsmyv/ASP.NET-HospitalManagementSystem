@@ -20,26 +20,29 @@ using Microsoft.Extensions.Logging;
 namespace HospitalManagementSystem.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class RegisterModel : PageModel
+    public class DoctorRegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IUserStore<IdentityUser> _userStore;
+        private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private IWebHostEnvironment _webHostENvironment;
-
-        public RegisterModel(
+        private IWebHostEnvironment _env;
+        public DoctorRegisterModel(
             UserManager<IdentityUser> userManager,
+            IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment env)
         {
             _userManager = userManager;
+            _userStore = userStore;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _webHostENvironment = webHostEnvironment;
+            _env = env;
         }
 
         [BindProperty]
@@ -66,13 +69,14 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-
             public string Name { get; set; }
             public Gender Gender { get; set; }
             public string Nationality { get; set; }
             public string Address { get; set; }
             public DateTime DOB { get; set; }
-            public IFormFile PictureURL { get; set; }
+            public string Specialist { get; set; }
+            public bool IsDoctor { get; set; }
+            public IFormFile PictureUri { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -122,19 +126,6 @@ namespace HospitalManagementSystem.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
-        }
-
-        private ApplicationUser CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<ApplicationUser>();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
         }
     }
 }
